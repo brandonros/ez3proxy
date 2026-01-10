@@ -1,30 +1,59 @@
 # ez3proxy
-Easy to deploy 3proxy setup
+
+NixOS-based 3proxy deployment on Vultr.
+
+## How it works
+
+1. Terraform provisions a Debian VM on Vultr
+2. nixos-anywhere converts it to NixOS
+3. 3proxy runs via the built-in nixpkgs module
+4. Secrets are [age](https://github.com/FiloSottile/age)-encrypted and decrypted on the server via [agenix](https://github.com/ryantm/agenix)
+
+## Prerequisites
+
+- [just](https://github.com/casey/just)
+- [Terraform](https://www.terraform.io/)
+- [Nix](https://nixos.org/download.html) with flakes enabled
 
 ## Quick start
 
-Requires [just](https://github.com/casey/just). Run `just` to see all commands.
+```bash
+# One-time setup (prompts for passwords interactively)
+just init
+
+# Set your Vultr API key and deploy
+export VULTR_API_KEY="your-api-key"
+just go
+```
+
+## Commands
 
 ```bash
 $ just
 Available recipes:
-    default   # Default recipe
-    deploy    # Deploy infrastructure
-    destroy   # Destroy infrastructure
-    go        # Full deploy: provision + wait
-    logs      # Show logs from server
-    server-ip # Get server IP from terraform
-    ssh       # SSH into server
-    update    # Update and restart app on server
-    wait      # Wait for server to be available
+    bootstrap    # Bootstrap NixOS (destructive - reformats disks)
+    default      # Default recipe
+    deploy       # Deploy infrastructure
+    destroy      # Destroy infrastructure
+    encrypt      # Encrypt secrets with age
+    go           # Full deploy
+    hostkeygen   # Generate SSH host key (for agenix)
+    init         # One-time setup: generate keys and create secrets
+    keygen       # Generate SSH deploy key
+    logs         # Show 3proxy logs
+    rebuild      # Rebuild from remote flake (after git push)
+    secrets-init # Create secrets files interactively
+    server-ip    # Get server IP from terraform
+    ssh          # SSH into server
+    wait         # Wait for SSH
 ```
 
-## How to use
+## Usage
 
 ```bash
-# http proxy
-curl -x http://myuser:mypassword@96.30.192.125:3128 https://ifconfig.me
+# HTTP proxy
+curl -x http://myuser:mypassword@<server-ip>:3128 https://ifconfig.me
 
-# socks
-curl -x socks5://myuser:mypassword@96.30.192.125:1080 https://ifconfig.me
+# SOCKS5
+curl -x socks5://myuser:mypassword@<server-ip>:1080 https://ifconfig.me
 ```
