@@ -86,6 +86,8 @@ runcmd:
   - [ sh, -c, "ufw default deny incoming" ]
   - [ sh, -c, "ufw default allow outgoing" ]
   - [ sh, -c, "ufw allow 22/tcp" ]
+%{ if deploy_app ~}
   - [ sh, -c, "ufw allow 3128/tcp" ]
   - [ sh, -c, "ufw allow 1080/tcp" ]
+%{ endif ~}
   - [ sh, -c, "ufw --force enable" ]
