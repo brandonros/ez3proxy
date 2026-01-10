@@ -30,8 +30,8 @@ resource "vultr_instance" "server1" {
   user_data = templatefile("${path.module}/cloud-config.yaml.tpl", {
     install_docker        = local.install_docker
     deploy_app            = local.deploy_app
-    ssh_authorized_key = local.ssh_authorized_key
-    user_password_hash = local.user_password_hash
+    ssh_authorized_key    = local.ssh_authorized_key
+    user_password_hash    = local.user_password_hash
   })
 }
 
