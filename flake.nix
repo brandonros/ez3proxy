@@ -22,12 +22,30 @@
       system = "x86_64-linux";
       specialArgs = { inherit sshPubKey; };
       modules = [
+        # Flake modules
         disko.nixosModules.disko
         agenix.nixosModules.default
         impermanence.nixosModules.impermanence
-        ./modules/vultr-base.nix
-        ./modules/3proxy.nix
-        { vultr.hostname = "ez3proxy"; }
+
+        # Platform modules
+        ./modules/platforms/base.nix
+        ./modules/platforms/vultr.nix
+
+        # Security
+        ./modules/security/hardening.nix
+
+        # Services
+        ./modules/services/3proxy.nix
+
+        # Instance configuration
+        {
+          vps.hostname = "ez3proxy";
+          # vps.tmpfsSize = "512M";
+          # vultr.nixPartitionSize = "20G";
+          # proxy.httpPort = 3128;
+          # proxy.socksPort = 1080;
+          # hardening.enableFail2ban = true;
+        }
       ];
     };
 
