@@ -38,6 +38,14 @@ with lib;
                 mountpoint = "/boot";
               };
             };
+            nix = {
+              size = "20G";
+              content = {
+                type = "filesystem";
+                format = "ext4";
+                mountpoint = "/nix";
+              };
+            };
             persist = {
               size = "100%";
               content = {
@@ -55,8 +63,9 @@ with lib;
       };
     };
 
-    # Ensure /persist is available early for impermanence
+    # Ensure these are available early for boot
     fileSystems."/persist".neededForBoot = true;
+    fileSystems."/nix".neededForBoot = true;
 
     # Impermanence - declare what survives reboots
     environment.persistence."/persist" = {
