@@ -108,6 +108,15 @@ logs:
     #!/usr/bin/env bash
     ssh -i secrets/deploy-key -o StrictHostKeyChecking=no "root@$(just server-ip)" 'journalctl -u 3proxy -f'
 
+# Test proxy connectivity
+test user pass:
+    #!/usr/bin/env bash
+    server_ip=$(just server-ip)
+    echo "Testing HTTP proxy..."
+    curl -s -x "http://{{user}}:{{pass}}@${server_ip}:3128" https://ifconfig.me && echo
+    echo "Testing SOCKS5 proxy..."
+    curl -s -x "socks5://{{user}}:{{pass}}@${server_ip}:1080" https://ifconfig.me && echo
+
 # Destroy infrastructure
 destroy:
     cd terraform && terraform destroy

@@ -13,6 +13,9 @@ with lib;
   };
 
   config = {
+    # Tell agenix where to find the host key (before impermanence bind mount)
+    age.identityPaths = [ "/persist/etc/ssh/ssh_host_ed25519_key" ];
+
     # Agenix secret for password hash
     age.secrets.passwordHash = {
       file = ../secrets/password-hash.age;
