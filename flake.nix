@@ -9,9 +9,10 @@
       url = "github:ryantm/agenix";
       inputs.nixpkgs.follows = "nixpkgs";
     };
+    impermanence.url = "github:nix-community/impermanence";
   };
 
-  outputs = { self, nixpkgs, disko, agenix }:
+  outputs = { self, nixpkgs, disko, agenix, impermanence }:
     let
       sshPubKey = builtins.readFile ./secrets/deploy-key.pub;
     in {
@@ -21,6 +22,7 @@
       modules = [
         disko.nixosModules.disko
         agenix.nixosModules.default
+        impermanence.nixosModules.impermanence
         ./modules/vultr-base.nix
         ./modules/3proxy.nix
         { vultr.hostname = "ez3proxy"; }

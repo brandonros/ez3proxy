@@ -21,6 +21,7 @@ with lib;
     };
 
     # Disk configuration (single disk /dev/vda, UEFI boot)
+    # Root is tmpfs (ephemeral), persistent data on /persist
     disko.devices = {
       disk.main = {
         device = "/dev/vda";
@@ -37,17 +38,39 @@ with lib;
                 mountpoint = "/boot";
               };
             };
-            root = {
+            persist = {
               size = "100%";
               content = {
                 type = "filesystem";
                 format = "ext4";
-                mountpoint = "/";
+                mountpoint = "/persist";
               };
             };
           };
         };
       };
+      nodev."/" = {
+        fsType = "tmpfs";
+        mountOptions = [ "defaults" "size=512M" "mode=755" ];
+      };
+    };
+
+    # Ensure /persist is available early for impermanence
+    fileSystems."/persist".neededForBoot = true;
+
+    # Impermanence - declare what survives reboots
+    environment.persistence."/persist" = {
+      hideMounts = true;
+      directories = [
+        "/var/log"
+        "/var/lib/nixos"
+        "/var/lib/systemd/coredump"
+        "/var/lib/fail2ban"
+        "/etc/ssh"  # SSH host keys (needed for agenix decryption)
+      ];
+      files = [
+        "/etc/machine-id"
+      ];
     };
 
     # Boot (UEFI with systemd-boot)

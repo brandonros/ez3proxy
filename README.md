@@ -8,6 +8,7 @@ NixOS-based 3proxy deployment on Vultr.
 2. nixos-anywhere converts it to NixOS
 3. 3proxy runs via the built-in nixpkgs module
 4. Secrets are [age](https://github.com/FiloSottile/age)-encrypted and decrypted on the server via [agenix](https://github.com/ryantm/agenix)
+5. Root filesystem is ephemeral (tmpfs) via [impermanence](https://github.com/nix-community/impermanence) - reboots wipe everything not explicitly persisted
 
 ## Prerequisites
 
