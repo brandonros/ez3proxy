@@ -101,7 +101,7 @@ ssh:
 rebuild:
     #!/usr/bin/env bash
     ssh -i secrets/deploy-key -o StrictHostKeyChecking=no "root@$(just server-ip)" \
-        'nixos-rebuild switch --refresh --flake github:brandonros/ez3proxy/nix#ez3proxy'
+        'nixos-rebuild switch --refresh --flake github:brandonros/ez3proxy#ez3proxy'
 
 # Show 3proxy logs
 logs:
