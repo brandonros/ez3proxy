@@ -15,6 +15,8 @@
   outputs = { self, nixpkgs, disko, agenix, impermanence }:
     let
       sshPubKey = builtins.readFile ./secrets/deploy-key.pub;
+      # Systems to provide devShells for
+      forAllSystems = nixpkgs.lib.genAttrs [ "x86_64-linux" "aarch64-linux" "aarch64-darwin" "x86_64-darwin" ];
     in {
     nixosConfigurations.ez3proxy = nixpkgs.lib.nixosSystem {
       system = "x86_64-linux";
@@ -28,5 +30,27 @@
         { vultr.hostname = "ez3proxy"; }
       ];
     };
+
+    devShells = forAllSystems (system:
+      let
+        pkgs = nixpkgs.legacyPackages.${system};
+      in {
+        default = pkgs.mkShell {
+          packages = [
+            pkgs.opentofu  # open-source terraform fork
+            pkgs.age
+            pkgs.just
+            pkgs.jq
+            pkgs.curl
+          ];
+          shellHook = ''
+            alias terraform=tofu
+            echo "ez3proxy dev shell"
+            echo "  tofu: $(tofu version -json | jq -r .terraform_version)"
+            echo "  just: $(just --version)"
+            echo "  age:  $(age --version)"
+          '';
+        };
+      });
   };
 }

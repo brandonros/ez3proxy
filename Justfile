@@ -60,13 +60,13 @@ encrypt:
     rm -f secrets/proxy-users secrets/password-hash
     @echo "Plaintext secrets removed"
 
-# Get server IP from terraform
+# Get server IP from tofu output
 server-ip:
-    @cd terraform && terraform output -raw server_ipv4 2>/dev/null
+    @cd terraform && tofu output -raw server_ipv4 2>/dev/null
 
 # Deploy infrastructure
 deploy:
-    cd terraform && terraform init -upgrade && terraform apply
+    cd terraform && tofu init -upgrade && tofu apply
 
 # Wait for SSH
 wait:
@@ -119,7 +119,7 @@ test user pass:
 
 # Destroy infrastructure
 destroy:
-    cd terraform && terraform destroy
+    cd terraform && tofu destroy
 
 # Full deploy
 go:

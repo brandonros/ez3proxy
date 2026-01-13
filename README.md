@@ -4,7 +4,7 @@ NixOS-based 3proxy deployment on Vultr.
 
 ## How it works
 
-1. Terraform provisions a Debian VM on Vultr
+1. OpenTofu provisions a Debian VM on Vultr
 2. nixos-anywhere converts it to NixOS
 3. 3proxy runs via the built-in nixpkgs module
 4. Secrets are [age](https://github.com/FiloSottile/age)-encrypted and decrypted on the server via [agenix](https://github.com/ryantm/agenix)
@@ -12,13 +12,14 @@ NixOS-based 3proxy deployment on Vultr.
 
 ## Prerequisites
 
-- [just](https://github.com/casey/just)
-- [Terraform](https://www.terraform.io/)
 - [Nix](https://nixos.org/download.html) with flakes enabled
 
 ## Quick start
 
 ```bash
+# Enter dev shell (provides tofu, age, just, etc.)
+nix develop
+
 # One-time setup (prompts for passwords interactively)
 just init
 
@@ -44,17 +45,19 @@ Available recipes:
     logs         # Show 3proxy logs
     rebuild      # Rebuild from remote flake (after git push)
     secrets-init # Create secrets files interactively
-    server-ip    # Get server IP from terraform
+    server-ip    # Get server IP from tofu output
     ssh          # SSH into server
+    test         # Test proxy connectivity
     wait         # Wait for SSH
 ```
 
 ## Usage
 
 ```bash
-# HTTP proxy
-curl -x http://myuser:mypassword@<server-ip>:3128 https://ifconfig.me
+# Quick test (tests both HTTP and SOCKS5)
+just test myuser mypassword
 
-# SOCKS5
+# Or manually:
+curl -x http://myuser:mypassword@<server-ip>:3128 https://ifconfig.me
 curl -x socks5://myuser:mypassword@<server-ip>:1080 https://ifconfig.me
 ```
