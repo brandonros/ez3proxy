@@ -2,3 +2,8 @@
 terraform/.terraform/
 terraform/*.tfstate*
 terraform/*.tfvars
+
+# Ignore all secrets except public keys and encrypted files
+secrets/*
+!secrets/*.pub
+!secrets/*.age

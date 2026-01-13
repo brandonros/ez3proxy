@@ -1,0 +1,101 @@
+# Vultr VPS base configuration
+{ config, lib, pkgs, sshPubKey, ... }:
+
+with lib;
+
+{
+  options.vultr = {
+    hostname = mkOption {
+      type = types.str;
+      default = "nixos";
+      description = "System hostname";
+    };
+  };
+
+  config = {
+    # Agenix secret for password hash
+    age.secrets.passwordHash = {
+      file = ../secrets/password-hash.age;
+      owner = "root";
+      mode = "0400";
+    };
+
+    # Disk configuration (single disk /dev/vda, UEFI boot)
+    disko.devices = {
+      disk.main = {
+        device = "/dev/vda";
+        type = "disk";
+        content = {
+          type = "gpt";
+          partitions = {
+            ESP = {
+              size = "512M";
+              type = "EF00";
+              content = {
+                type = "filesystem";
+                format = "vfat";
+                mountpoint = "/boot";
+              };
+            };
+            root = {
+              size = "100%";
+              content = {
+                type = "filesystem";
+                format = "ext4";
+                mountpoint = "/";
+              };
+            };
+          };
+        };
+      };
+    };
+
+    # Boot (UEFI with systemd-boot)
+    boot.loader.systemd-boot.enable = true;
+    boot.loader.efi.canTouchEfiVariables = true;
+
+    # Virtio drivers for Vultr/KVM
+    boot.initrd.availableKernelModules = [ "virtio_pci" "virtio_blk" "virtio_scsi" "ahci" "sd_mod" ];
+
+    # Networking
+    networking.hostName = config.vultr.hostname;
+    networking.useDHCP = true;
+    networking.firewall.allowedTCPPorts = [ 22 ];
+
+    # Root user
+    users.users.root = {
+      openssh.authorizedKeys.keys = [ sshPubKey ];
+      hashedPasswordFile = config.age.secrets.passwordHash.path;
+    };
+
+    # Normal user with sudo
+    users.users.user = {
+      isNormalUser = true;
+      extraGroups = [ "wheel" ];
+      openssh.authorizedKeys.keys = [ sshPubKey ];
+      hashedPasswordFile = config.age.secrets.passwordHash.path;
+    };
+    security.sudo.wheelNeedsPassword = false;
+
+    # SSH
+    services.openssh = {
+      enable = true;
+      settings = {
+        PermitRootLogin = "yes";
+        PasswordAuthentication = true;
+      };
+    };
+
+    # Security
+    services.fail2ban.enable = true;
+
+    # Auto-upgrades
+    system.autoUpgrade = {
+      enable = true;
+      allowReboot = false;
+    };
+
+    # System
+    system.stateVersion = "25.11";
+  };
+}
