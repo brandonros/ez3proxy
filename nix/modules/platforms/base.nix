@@ -36,7 +36,7 @@ with lib;
 
     # Agenix secret for password hash
     age.secrets.passwordHash = {
-      file = ../../secrets/password-hash.age;
+      file = ../../../secrets/password-hash.age;
       owner = "root";
       mode = "0400";
     };

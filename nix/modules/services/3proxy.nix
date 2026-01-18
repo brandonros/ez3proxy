@@ -21,7 +21,7 @@ with lib;
   config = {
     # Agenix secret (world-readable for DynamicUser service)
     age.secrets.proxyUsers = {
-      file = ../../secrets/proxy-users.age;
+      file = ../../../secrets/proxy-users.age;
       mode = "0444";
     };
 
