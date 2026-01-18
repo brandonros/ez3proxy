@@ -11,7 +11,6 @@ init:
     just keygen
     just hostkeygen
     just secrets-init
-    just encrypt
     @echo ""
     @echo "Setup complete! Run: just go"
 
@@ -35,30 +34,28 @@ hostkeygen:
         ssh-keygen -t ed25519 -f secrets/host-key -N "" -C "ez3proxy"
     fi
 
-# Create secrets files interactively
+# Create and encrypt secrets in one step (no plaintext touches disk)
 secrets-init:
     #!/usr/bin/env bash
     mkdir -p secrets
-    if [ ! -f secrets/password-hash ]; then
+    host_pub=$(cat secrets/host-key.pub)
+
+    if [ ! -f secrets/password-hash.age ]; then
         read -s -p "Enter system password: " password
         echo
-        nix-shell -p python3Packages.passlib --run "python3 -c \"from passlib.hash import sha512_crypt; print(sha512_crypt.hash('$password'))\"" > secrets/password-hash
-        echo "Created secrets/password-hash"
+        nix-shell -p mkpasswd --run "mkpasswd -m sha-512 '$password'" \
+            | age -r "$host_pub" -o secrets/password-hash.age
+        echo "Created secrets/password-hash.age"
     fi
-    if [ ! -f secrets/proxy-users ]; then
+
+    if [ ! -f secrets/proxy-users.age ]; then
         read -p "Enter proxy username: " proxy_user
         read -s -p "Enter proxy password: " proxy_pass
         echo
-        echo "users ${proxy_user}:CL:${proxy_pass}" > secrets/proxy-users
-        echo "Created secrets/proxy-users"
+        echo "users ${proxy_user}:CL:${proxy_pass}" \
+            | age -r "$host_pub" -o secrets/proxy-users.age
+        echo "Created secrets/proxy-users.age"
     fi
-
-# Encrypt secrets with age
-encrypt:
-    age -r "$(cat secrets/host-key.pub)" -o secrets/proxy-users.age secrets/proxy-users
-    age -r "$(cat secrets/host-key.pub)" -o secrets/password-hash.age secrets/password-hash
-    rm -f secrets/proxy-users secrets/password-hash
-    @echo "Plaintext secrets removed"
 
 # Get server IP from tofu output
 server-ip:

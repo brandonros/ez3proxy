@@ -35,19 +35,27 @@ variable "enable_ipv6" {
   description = "Enable IPv6 on the instance"
 }
 
-locals {
-  ssh_public_key = file("${path.module}/../secrets/deploy-key.pub")
+variable "os_id" {
+  type        = number
+  default     = 2136
+  description = "Vultr OS ID (2136 = Debian 12 Bookworm)"
+}
+
+variable "ssh_public_key_path" {
+  type        = string
+  default     = "../secrets/deploy-key.pub"
+  description = "Path to SSH public key file"
 }
 
 resource "vultr_ssh_key" "default" {
   name    = "${var.hostname}-key"
-  ssh_key = local.ssh_public_key
+  ssh_key = file("${path.module}/${var.ssh_public_key_path}")
 }
 
 resource "vultr_instance" "server1" {
   plan              = var.plan
   region            = var.region
-  os_id             = 2136  # Debian bookworm
+  os_id             = var.os_id
   hostname          = var.hostname
   ssh_key_ids       = [vultr_ssh_key.default.id]
   enable_ipv6       = var.enable_ipv6
