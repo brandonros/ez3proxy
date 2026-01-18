@@ -16,13 +16,13 @@ Edit `flake.nix` to set proxy credentials:
 
 ```nix
 proxy.users = [
-  "users myuser:CL:mypassword"
+  "users testuser:CL:testpass123"
 ];
 ```
 
 ## Test
 
 ```bash
-curl -x "http://user:pass@SERVER_IP:3128" https://ifconfig.me
-curl -x "socks5://user:pass@SERVER_IP:1080" https://ifconfig.me
+curl -x "http://testuser:testpass123@SERVER_IP:3128" https://ifconfig.me
+curl -x "socks5://testuser:testpass123@SERVER_IP:1080" https://ifconfig.me
 ```

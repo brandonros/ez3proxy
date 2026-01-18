@@ -21,7 +21,7 @@ with lib;
       type = types.listOf types.str;
       default = [];
       description = "List of user:CL:password entries";
-      example = [ "users myuser:CL:mypassword" ];
+      example = [ "users testuser:CL:testpass123" ];
     };
   };
 
