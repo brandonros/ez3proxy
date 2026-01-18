@@ -28,14 +28,14 @@
         impermanence.nixosModules.impermanence
 
         # Platform modules
-        ./modules/platforms/base.nix
-        ./modules/platforms/vultr.nix
+        ./nix/modules/platforms/base.nix
+        ./nix/modules/platforms/vultr.nix
 
         # Security
-        ./modules/security/hardening.nix
+        ./nix/modules/security/hardening.nix
 
         # Services
-        ./modules/services/3proxy.nix
+        ./nix/modules/services/3proxy.nix
 
         # Instance configuration
         {
