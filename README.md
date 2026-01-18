@@ -1,63 +1,53 @@
 # ez3proxy
 
-NixOS-based 3proxy deployment on Vultr.
+3proxy on NixOS, deployed to Vultr with one command.
 
-## How it works
+Built on [nix-vps-template](https://github.com/brandonros/nix-vps-template).
 
-1. OpenTofu provisions a Debian VM on Vultr
-2. nixos-anywhere converts it to NixOS
-3. 3proxy runs via the built-in nixpkgs module
-4. Secrets are [age](https://github.com/FiloSottile/age)-encrypted and decrypted on the server via [agenix](https://github.com/ryantm/agenix)
-5. Root filesystem is ephemeral (tmpfs) via [impermanence](https://github.com/nix-community/impermanence) - reboots wipe everything not explicitly persisted
-
-## Prerequisites
-
-- [Nix](https://nixos.org/download.html) with flakes enabled
-
-## Quick start
+## Quick Start
 
 ```bash
-# Enter dev shell (provides tofu, age, just, etc.)
 nix develop
-
-# One-time setup (prompts for passwords interactively)
-just init
-
-# Set your Vultr API key and deploy
-export VULTR_API_KEY="your-api-key"
-just go
-```
-
-## Commands
-
-```bash
-$ just
-Available recipes:
-    bootstrap    # Bootstrap NixOS (destructive - reformats disks)
-    default      # Default recipe
-    deploy       # Deploy infrastructure
-    destroy      # Destroy infrastructure
-    encrypt      # Encrypt secrets with age
-    go           # Full deploy
-    hostkeygen   # Generate SSH host key (for agenix)
-    init         # One-time setup: generate keys and create secrets
-    keygen       # Generate SSH deploy key
-    logs         # Show 3proxy logs
-    rebuild      # Rebuild from remote flake (after git push)
-    secrets-init # Create secrets files interactively
-    server-ip    # Get server IP from tofu output
-    ssh          # SSH into server
-    test         # Test proxy connectivity
-    wait         # Wait for SSH
+just init           # generates keys, prompts for passwords
+export VULTR_API_KEY="your-key"
+just go             # provisions VM, installs NixOS, starts 3proxy
 ```
 
 ## Usage
 
 ```bash
-# Quick test (tests both HTTP and SOCKS5)
+# Test proxy
 just test myuser mypassword
 
-# Or manually:
-curl -x http://myuser:mypassword@<server-ip>:3128 https://ifconfig.me
-curl -x socks5://myuser:mypassword@<server-ip>:1080 https://ifconfig.me
+# Or manually
+curl -x http://user:pass@<ip>:3128 https://ifconfig.me
+curl -x socks5://user:pass@<ip>:1080 https://ifconfig.me
+
+# View logs
+just logs
+
+# SSH access
+just ssh
+
+# Update after git push
+just rebuild
+
+# Tear down
+just destroy
 ```
+
+## Configuration
+
+Edit [flake.nix](flake.nix) to customize:
+
+```nix
+{
+  vps.hostname = "ez3proxy";
+  vps.passwordSecretFile = ./secrets/password-hash.age;
+  proxy.usersSecretFile = ./secrets/proxy-users.age;
+  # proxy.httpPort = 3128;
+  # proxy.socksPort = 1080;
+}
+```
+
+Edit [terraform/main.tf](terraform/main.tf) for infrastructure (region, plan, etc).

@@ -16,12 +16,16 @@ with lib;
       default = 1080;
       description = "SOCKS5 proxy port";
     };
+
+    usersSecretFile = mkOption {
+      type = types.path;
+      description = "Path to age-encrypted 3proxy users file";
+    };
   };
 
   config = {
-    # Agenix secret (world-readable for DynamicUser service)
     age.secrets.proxyUsers = {
-      file = ../../../secrets/proxy-users.age;
+      file = config.proxy.usersSecretFile;
       mode = "0444";
     };
 

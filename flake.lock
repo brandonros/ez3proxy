@@ -52,11 +52,11 @@
         ]
       },
       "locked": {
-        "lastModified": 1766150702,
-        "narHash": "sha256-P0kM+5o+DKnB6raXgFEk3azw8Wqg5FL6wyl9jD+G5a4=",
+        "lastModified": 1768727946,
+        "narHash": "sha256-le2GY+ZR6uRHMuOAc60sBR3gBD2BEk1qOZ3S5C/XFpU=",
         "owner": "nix-community",
         "repo": "disko",
-        "rev": "916506443ecd0d0b4a0f4cf9d40a3c22ce39b378",
+        "rev": "558e84658d0eafc812497542ad6ca0d9654b3b0f",
         "type": "github"
       },
       "original": {
@@ -126,6 +126,26 @@
         "type": "github"
       }
     },
+    "nix-vps-template": {
+      "inputs": {
+        "nixpkgs": [
+          "nixpkgs"
+        ]
+      },
+      "locked": {
+        "lastModified": 1768738683,
+        "narHash": "sha256-XMHND1fYvng2HHhOx+bIfAqI8G0TGBpRn0oZzPs5vWU=",
+        "owner": "brandonros",
+        "repo": "nix-vps-template",
+        "rev": "5beb60f5be60b0beb4ac343d24588939c0eae290",
+        "type": "github"
+      },
+      "original": {
+        "owner": "brandonros",
+        "repo": "nix-vps-template",
+        "type": "github"
+      }
+    },
     "nixpkgs": {
       "locked": {
         "lastModified": 1748026106,
@@ -144,11 +164,11 @@
     },
     "nixpkgs_2": {
       "locked": {
-        "lastModified": 1768028080,
-        "narHash": "sha256-50aDK+8eLvsLK39TzQhKNq50/HcXyP4hyxOYoPoVxjo=",
+        "lastModified": 1768621446,
+        "narHash": "sha256-6YwHV1cjv6arXdF/PQc365h1j+Qje3Pydk501Rm4Q+4=",
         "owner": "NixOS",
         "repo": "nixpkgs",
-        "rev": "d03088749a110d52a4739348f39a63f84bb0be14",
+        "rev": "72ac591e737060deab2b86d6952babd1f896d7c5",
         "type": "github"
       },
       "original": {
@@ -163,6 +183,7 @@
         "agenix": "agenix",
         "disko": "disko",
         "impermanence": "impermanence",
+        "nix-vps-template": "nix-vps-template",
         "nixpkgs": "nixpkgs_2"
       }
     },
