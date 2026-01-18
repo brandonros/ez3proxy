@@ -1,7 +1,7 @@
-# This file is maintained automatically by "terraform init".
+# This file is maintained automatically by "tofu init".
 # Manual edits may be lost in future updates.
 
-provider "registry.terraform.io/vultr/vultr" {
+provider "registry.opentofu.org/vultr/vultr" {
   version     = "2.28.0"
   constraints = "~> 2.19"
   hashes = [

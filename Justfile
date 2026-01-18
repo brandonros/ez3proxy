@@ -86,7 +86,12 @@ bootstrap:
     install -d -m 755 "$tmp/persist/etc/ssh"
     install -m 600 secrets/host-key "$tmp/persist/etc/ssh/ssh_host_ed25519_key"
     install -m 644 secrets/host-key.pub "$tmp/persist/etc/ssh/ssh_host_ed25519_key.pub"
-    nix run github:nix-community/nixos-anywhere -- --flake .#ez3proxy --target-host "root@${server_ip}" -i secrets/deploy-key --extra-files "$tmp"
+    nix run github:nix-community/nixos-anywhere -- \
+        --build-on-remote \
+        --flake .#ez3proxy \
+        --target-host "root@${server_ip}" \
+        -i secrets/deploy-key \
+        --extra-files "$tmp"
     rm -rf "$tmp"
 
 # SSH into server
