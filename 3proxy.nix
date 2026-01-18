@@ -17,18 +17,15 @@ with lib;
       description = "SOCKS5 proxy port";
     };
 
-    usersSecretFile = mkOption {
-      type = types.path;
-      description = "Path to age-encrypted 3proxy users file";
+    users = mkOption {
+      type = types.listOf types.str;
+      default = [];
+      description = "List of user:CL:password entries";
+      example = [ "users myuser:CL:mypassword" ];
     };
   };
 
   config = {
-    age.secrets.proxyUsers = {
-      file = config.proxy.usersSecretFile;
-      mode = "0444";
-    };
-
     services._3proxy = {
       enable = true;
       services = [
@@ -45,7 +42,7 @@ with lib;
           acl = [{ rule = "allow"; users = [ "*" ]; }];
         }
       ];
-      usersFile = config.age.secrets.proxyUsers.path;
+      extraConfig = concatStringsSep "\n" config.proxy.users;
     };
 
     networking.firewall.allowedTCPPorts = [

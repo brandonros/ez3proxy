@@ -1,9 +1,1 @@
 .DS_Store
-.just-base.just
-terraform/.terraform/
-terraform/*.tfstate*
-
-# Ignore all secrets except public keys and encrypted files
-secrets/*
-!secrets/*.pub
-!secrets/*.age

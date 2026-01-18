@@ -1,53 +1,28 @@
 # ez3proxy
 
-3proxy on NixOS, deployed to Vultr with one command.
+Minimal 3proxy server on NixOS using [nix-vps-template](https://github.com/brandonros/nix-vps-template).
 
-Built on [nix-vps-template](https://github.com/brandonros/nix-vps-template).
-
-## Quick Start
+## Deploy
 
 ```bash
-nix develop
-just init           # generates keys, prompts for passwords
-export VULTR_API_KEY="your-key"
-just go             # provisions VM, installs NixOS, starts 3proxy
+# From nix-vps-template repo:
+just go                                                    # deploy base NixOS VPS
+GITHUB_REPO=brandonros/ez3proxy FLAKE_TARGET=.#ez3proxy just rebuild  # switch to ez3proxy
 ```
 
-## Usage
+## Configure
 
-```bash
-# Test proxy
-just test myuser mypassword
-
-# Or manually
-curl -x http://user:pass@<ip>:3128 https://ifconfig.me
-curl -x socks5://user:pass@<ip>:1080 https://ifconfig.me
-
-# View logs
-just logs
-
-# SSH access
-just ssh
-
-# Update after git push
-just rebuild
-
-# Tear down
-just destroy
-```
-
-## Configuration
-
-Edit [flake.nix](flake.nix) to customize:
+Edit `flake.nix` to set proxy credentials:
 
 ```nix
-{
-  vps.hostname = "ez3proxy";
-  vps.passwordSecretFile = ./secrets/password-hash.age;
-  proxy.usersSecretFile = ./secrets/proxy-users.age;
-  # proxy.httpPort = 3128;
-  # proxy.socksPort = 1080;
-}
+proxy.users = [
+  "users myuser:CL:mypassword"
+];
 ```
 
-Edit [terraform/main.tf](terraform/main.tf) for infrastructure (region, plan, etc).
+## Test
+
+```bash
+curl -x "http://user:pass@SERVER_IP:3128" https://ifconfig.me
+curl -x "socks5://user:pass@SERVER_IP:1080" https://ifconfig.me
+```
