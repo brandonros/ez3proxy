@@ -136,7 +136,7 @@ in {
       # Network namespace setup
       systemd.services.vpn-netns = {
         description = "VPN Network Namespace";
-        before = [ "openvpn-vpn.service" "3proxy.service" ];
+        before = [ "openvpn-vpn.service" "_3proxy.service" ];
         wantedBy = [ "multi-user.target" ];
         serviceConfig = {
           Type = "oneshot";
@@ -162,7 +162,7 @@ in {
       };
 
       # 3proxy in the namespace
-      systemd.services."3proxy" = {
+      systemd.services._3proxy = {
         description = "3proxy in VPN namespace";
         after = [ "openvpn-vpn.service" ];
         requires = [ "openvpn-vpn.service" ];
