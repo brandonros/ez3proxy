@@ -9,14 +9,12 @@
       system = "x86_64-linux";
       modules = [
         nix-vps-template.nixosModules.default
-        { 
-          vps.sshPubKey = builtins.readFile ./assets/deploy-key.pub; 
+        {
+          vps.sshPubKey = builtins.readFile ./assets/deploy-key.pub;
           vps.hostname = "ez3proxy";
         }
-
         ./3proxy.nix
         {
-          # Configure proxy users (change these!)
           proxy.users = [
             "users testuser:CL:testpass123"
           ];

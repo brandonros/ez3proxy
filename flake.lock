@@ -1,37 +1,15 @@
 {
   "nodes": {
-    "disko": {
-      "inputs": {
-        "nixpkgs": [
-          "nix-vps-template",
-          "nixpkgs"
-        ]
-      },
-      "locked": {
-        "lastModified": 1768727946,
-        "narHash": "sha256-le2GY+ZR6uRHMuOAc60sBR3gBD2BEk1qOZ3S5C/XFpU=",
-        "owner": "nix-community",
-        "repo": "disko",
-        "rev": "558e84658d0eafc812497542ad6ca0d9654b3b0f",
-        "type": "github"
-      },
-      "original": {
-        "owner": "nix-community",
-        "repo": "disko",
-        "type": "github"
-      }
-    },
     "nix-vps-template": {
       "inputs": {
-        "disko": "disko",
         "nixpkgs": "nixpkgs"
       },
       "locked": {
-        "lastModified": 1768765178,
-        "narHash": "sha256-OPfzR1WGzs2498UXoaN2lt6NUvixdSwO/wqAxYLSBgY=",
+        "lastModified": 1768848332,
+        "narHash": "sha256-FkJ6uwoky7icvpKEzXvKBbvZxB2XP4Dy4zooWocupLM=",
         "owner": "brandonros",
         "repo": "nix-vps-template",
-        "rev": "1e5f7494f8c615a110238d265b10fbf51651c866",
+        "rev": "eeb11a34dfbbbf6d49d34c4b436aa86b7304aed4",
         "type": "github"
       },
       "original": {
