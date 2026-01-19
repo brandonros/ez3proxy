@@ -21,8 +21,7 @@
           proxy.vpn = {
             enable = true;
             configFile = ./openvpn/us6761.nordvpn.com.tcp.ovpn;
-            username = "testuser";
-            password = "testpassword";
+            # authFile defaults to /etc/secrets/vpn-auth (create on server)
           };
         }
       ];

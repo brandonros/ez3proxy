@@ -79,12 +79,6 @@ let
     socks -p${toString cfg.socksPort}
   '';
 
-  # OpenVPN auth file
-  vpnAuthFile = pkgs.writeText "vpn-auth.txt" ''
-    ${cfg.vpn.username}
-    ${cfg.vpn.password}
-  '';
-
 in {
   options.proxy = {
     httpPort = mkOption {
@@ -118,14 +112,10 @@ in {
         description = "Path to OpenVPN config file (.ovpn)";
       };
 
-      username = mkOption {
+      authFile = mkOption {
         type = types.str;
-        description = "VPN username";
-      };
-
-      password = mkOption {
-        type = types.str;
-        description = "VPN password";
+        default = "/etc/secrets/vpn-auth";
+        description = "Path to file containing username (line 1) and password (line 2)";
       };
     };
   };
@@ -151,11 +141,12 @@ in {
         description = "OpenVPN in VPN namespace";
         after = [ "vpn-netns.service" "network-online.target" ];
         requires = [ "vpn-netns.service" ];
+        wants = [ "network-online.target" ];
         wantedBy = [ "multi-user.target" ];
         serviceConfig = {
           Type = "notify";
           NetworkNamespacePath = "/run/netns/vpn";
-          ExecStart = "${pkgs.openvpn}/bin/openvpn --config ${cfg.vpn.configFile} --auth-user-pass ${vpnAuthFile} --auth-nocache --script-security 2";
+          ExecStart = "${pkgs.openvpn}/bin/openvpn --config ${cfg.vpn.configFile} --auth-user-pass ${cfg.vpn.authFile} --auth-nocache --script-security 2";
           Restart = "on-failure";
           RestartSec = "5s";
         };
