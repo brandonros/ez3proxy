@@ -26,3 +26,15 @@ proxy.users = [
 curl -x "http://testuser:testpass123@SERVER_IP:3128" https://ifconfig.me
 curl -x "socks5://testuser:testpass123@SERVER_IP:1080" https://ifconfig.me
 ```
+
+## VPN configuration
+
+```bash
+# ssh'd into the host
+mkdir -p /etc/secrets
+cat > /etc/secrets/vpn-auth << 'EOF'
+{{username}}
+{{password}}
+EOF
+chmod 600 /etc/secrets/vpn-auth
+```
