@@ -5,11 +5,11 @@
         "nixpkgs": "nixpkgs"
       },
       "locked": {
-        "lastModified": 1768848332,
-        "narHash": "sha256-FkJ6uwoky7icvpKEzXvKBbvZxB2XP4Dy4zooWocupLM=",
+        "lastModified": 1768849874,
+        "narHash": "sha256-5QPf4UQG1vtyZ0PgKvT1Zgq1shtGrxM1U0zqpnT9roU=",
         "owner": "brandonros",
         "repo": "nix-vps-template",
-        "rev": "eeb11a34dfbbbf6d49d34c4b436aa86b7304aed4",
+        "rev": "b94f1b98689d321644b6b789f1cb399bc3609e26",
         "type": "github"
       },
       "original": {

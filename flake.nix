@@ -5,15 +5,15 @@
   };
 
   outputs = { nixpkgs, nix-vps-template, ... }: {
-    nixosConfigurations.ez3proxy = nixpkgs.lib.nixosSystem {
+    nixosConfigurations.default = nixpkgs.lib.nixosSystem {
       system = "x86_64-linux";
       modules = [
         nix-vps-template.nixosModules.default
         {
-          vps.sshPubKey = builtins.readFile ./assets/deploy-key.pub;
+          vps.sshPubKey = builtins.readFile ./keys/deploy-key.pub;
           vps.hostname = "ez3proxy";
         }
-        ./3proxy.nix
+        ./modules/3proxy.nix
         {
           proxy.users = [
             "users testuser:CL:testpass123"

@@ -7,7 +7,7 @@ Minimal 3proxy server on NixOS using [nix-vps-template](https://github.com/brand
 ```bash
 # From nix-vps-template repo:
 just go                                       # deploy base NixOS VPS
-just rebuild brandonros/ez3proxy ez3proxy     # switch to ez3proxy
+just rebuild brandonros/ez3proxy              # switch to ez3proxy
 ```
 
 ## Configure
