@@ -8,10 +8,12 @@
     nixosConfigurations.ez3proxy = nixpkgs.lib.nixosSystem {
       system = "x86_64-linux";
       modules = [
-        (nix-vps-template.nixosModules.default {
-          sshPubKey = builtins.readFile ./assets/deploy-key.pub;
-          hostname = "ez3proxy";
-        })
+        nix-vps-template.nixosModules.default
+        { 
+          vps.sshPubKey = builtins.readFile ./assets/deploy-key.pub; 
+          vps.hostname = "ez3proxy";
+        }
+
         ./3proxy.nix
         {
           # Configure proxy users (change these!)
