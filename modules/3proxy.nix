@@ -39,6 +39,10 @@ let
     ${pkgs.iptables}/bin/iptables -t nat -C POSTROUTING -s 10.200.200.0/24 -j MASQUERADE 2>/dev/null || \
       ${pkgs.iptables}/bin/iptables -t nat -A POSTROUTING -s 10.200.200.0/24 -j MASQUERADE
 
+    # SNAT for traffic entering namespace (so responses route back via veth, not VPN)
+    ${pkgs.iptables}/bin/iptables -t nat -C POSTROUTING -o veth-vpn -j MASQUERADE 2>/dev/null || \
+      ${pkgs.iptables}/bin/iptables -t nat -A POSTROUTING -o veth-vpn -j MASQUERADE
+
     # Port forward to namespace
     ${pkgs.iptables}/bin/iptables -t nat -C PREROUTING -p tcp --dport ${toString cfg.httpPort} -j DNAT --to-destination 10.200.200.2:${toString cfg.httpPort} 2>/dev/null || \
       ${pkgs.iptables}/bin/iptables -t nat -A PREROUTING -p tcp --dport ${toString cfg.httpPort} -j DNAT --to-destination 10.200.200.2:${toString cfg.httpPort}
@@ -56,6 +60,7 @@ let
     ${pkgs.iptables}/bin/iptables -t nat -D PREROUTING -p tcp --dport ${toString cfg.httpPort} -j DNAT --to-destination 10.200.200.2:${toString cfg.httpPort} 2>/dev/null || true
     ${pkgs.iptables}/bin/iptables -t nat -D PREROUTING -p tcp --dport ${toString cfg.socksPort} -j DNAT --to-destination 10.200.200.2:${toString cfg.socksPort} 2>/dev/null || true
     ${pkgs.iptables}/bin/iptables -t nat -D POSTROUTING -s 10.200.200.0/24 -j MASQUERADE 2>/dev/null || true
+    ${pkgs.iptables}/bin/iptables -t nat -D POSTROUTING -o veth-vpn -j MASQUERADE 2>/dev/null || true
     ${pkgs.iptables}/bin/iptables -D FORWARD -i veth-vpn -j ACCEPT 2>/dev/null || true
     ${pkgs.iptables}/bin/iptables -D FORWARD -o veth-vpn -j ACCEPT 2>/dev/null || true
     ${pkgs.iproute2}/bin/ip link del veth-vpn 2>/dev/null || true
